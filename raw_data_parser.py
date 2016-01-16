@@ -42,9 +42,17 @@ def parse(input_path, output_folder):
                 m2 = pattern2.match(line)
                 m = pattern3.match(m2.group(1))
                 doc = {}
+                success = True
                 for k in keys:
-                    doc[k] = m.group(k)
-                all_data[cur_qid].append(doc)
+                    try:
+                        doc[k] = m.group(k)
+                    except:
+                        success = False
+                        print line
+                        print '-'*30
+                        break
+                if success:
+                    all_data[cur_qid].append(doc)
     for qid in all_data:
         with codecs.open( os.path.join(output_folder, qid), 'wb', 'utf-8' ) as f:
             json.dump(all_data[qid], f)
